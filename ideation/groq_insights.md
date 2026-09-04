@@ -73,3 +73,30 @@ This is the natural next step: prove the architecture is truly backbone-agnostic
 - Proves the F161 conservation law holds even with backbone heterogeneity
 - Validates the F170 architecture for real fleet deployment
 - Has clear theoretical contribution: split FL with frozen private backbones
+
+## Q5: F173 recommendation
+
+**F173 — Federated Continual Learning with Private Replay Buffers**
+
+**The experiment:**
+- Continual-learning federation on 4 substrates (MCU, Cortex-A, Jetson Nano, ASIC)
+- Each node: 64-dim encoder-head (F170 head) + private replay buffer (≤2KB)
+- When new task arrives (novel vibration, new arrhythmia, new modality): fine-tune locally with EWC + replay
+- Send only Δhead (≈1KB) to server
+- Server aggregates with Trimmed Mean (F172)
+- Broadcasts back
+
+**The hypothesis:**
+- Retain ≥90% of pre-task accuracy on all previous tasks
+- Achieve ≥2× faster convergence on new task vs naïve FedAvg
+- Communication ≤5% of baseline FedAvg budget
+
+**The falsifiable claim:**
+- If after 3 successive tasks the average accuracy drop on any prior task is >10% (catastrophic forgetting), the claim is falsified
+
+**Why a paper:**
+- Novel combination: continual learning + federated + tiny heads
+- Reproducible across 4 substrates
+- Quantified memory budget (≤2KB per device)
+- Direct extension of F170/F171/F172
+- Important for real vessel fleets: vessels learn new sound classes over time without losing old ones
