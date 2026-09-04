@@ -233,3 +233,30 @@ this exists. Everything else is in service of that.
 6. **The captain is the witness.** Production = wearable + haptic + 6-second lead time.
 
 Get to work.
+
+---
+
+## 11. NEW: F174 (Per-axis aggregation) and F175 (INT4 TT) — DONE in the sandbox
+
+These two are already shipped. Don't redo them. But if you want to
+extend, here's what's available:
+
+**F174 — Per-Axis Trimmed Mean**: For each TT core, sort the 6 device
+versions and drop the top/bottom 1 (with 6 devices). Apply to the
+class head too. Result: 28% test acc under 1/6 adversary vs 20%
+for FedAvg. Code: `mode_wise_federation.py` in the F170 repo.
+
+**F175 — INT4 TT Head**: 224 bytes fp32 → 31 bytes int4 (7.2x
+compression, zero accuracy loss). Two int4 values per byte
+(high nibble + low nibble). Packing order documented in `tt_int4.py`.
+FNV-1a 64-bit state hash on packed bytes is byte-exact.
+
+**The next step on F175**: write the C port for ESP32. The
+inference routine:
+1. Load 31 bytes from flash
+2. Unpack to 61 int4 values (28 cores + 5 class head)
+3. TT contraction in int4 arithmetic
+4. Output predicted class
+
+This is the smallest production-ready federated classifier we have.
+
