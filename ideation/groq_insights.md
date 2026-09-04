@@ -100,3 +100,44 @@ This is the natural next step: prove the architecture is truly backbone-agnostic
 - Quantified memory budget (≤2KB per device)
 - Direct extension of F170/F171/F172
 - Important for real vessel fleets: vessels learn new sound classes over time without losing old ones
+
+## Q6: Honest senior-reviewer critique
+
+**Verdict on F170-F172: necessary scaffolding, not breakthrough.**
+
+The 4 candidate breakthrough directions:
+- **A. Learning the aggregation operator itself** under extreme sparsity
+- **B. Structure-evolving TinyML** (cores that grow/prune)
+- **C. Predictive coding / generative world models at the edge**
+- **D. A new invariance or conservation law that dictates the architecture**
+
+**My judgment (not theirs):** the actual highest-leverage move is
+**A × B**: a learned aggregator + adaptive structure. Concretely:
+the 1.3 KB flat head is replaced with a Tensor-Train head where
+χ is a learnable resource, and the aggregator weights are a
+learnable function of the local gradient statistics.
+
+## F173 R&D result (DONE)
+
+- Tensor-Train head with 56 params, 224 bytes (5.8x smaller than F170)
+- chi=2 wins: 35% test acc on real ESC-50
+- Byte-exact round-trip via FNV-1a 64-bit state hash
+- FedAvg of cores works (per-core averaging)
+- Honest reading: substrate, not breakthrough — gives us the
+  algebra for mode-wise federation, structure evolution, conservation
+  laws on bond dimensions
+- Live canon: paper-485, 78 papers, hash 0x48aaead731c36a3c
+
+## Why I'm not chasing the "new computational model" framing
+
+The senior reviewer is right that "redefining what is being optimized"
+is the right kind of question. But it's a 5-year research program, not
+a 3-month R&D sprint. The substrate (F173) is the right level for
+where we are: we have byte-exact, multi-dimensional, contractible
+cells that future work can build on. That's publishable engineering.
+The "ontology shift" rhetoric papers are usually empty.
+
+The real breakthroughs on the vessel edge will come from
+running F170-F173 on real vessels with real captains and seeing
+what breaks. That data doesn't exist yet. The theory can only
+get us so far.
